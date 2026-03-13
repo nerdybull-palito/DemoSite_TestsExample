@@ -1,3 +1,4 @@
+// Testing change in GitHub
 // utils/pages/auth.page.ts
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './base.page';
