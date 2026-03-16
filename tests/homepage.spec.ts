@@ -1,4 +1,4 @@
-// tests/01-homepage.spec.ts
+// tests/homepage.spec.ts
 // Each test contains multiple specific expect() assertions covering:
 // URL, HTTP status, element visibility, text content, attributes, counts, and state.
 
