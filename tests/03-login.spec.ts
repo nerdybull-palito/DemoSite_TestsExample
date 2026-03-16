@@ -4,8 +4,8 @@
 import { test, expect } from '@playwright/test';
 
 const BASE           = 'https://demo.nopcommerce.com';
-const VALID_EMAIL    = 'admin@yourstore.com';
-const VALID_PASSWORD = 'admin';
+const VALID_EMAIL    = 'test1234@gmail.com';
+const VALID_PASSWORD = 'pass1234';
 
 test.describe('User Login & Logout', () => {
 
@@ -17,28 +17,54 @@ test.describe('User Login & Logout', () => {
     await expect(page, 'URL should be /login').toHaveURL(/\/login$/);
     await expect(page, 'Title should include nopCommerce').toHaveTitle(/nopCommerce/i);
 
-    await expect(page.locator('#Email'),              'Email input should be visible').toBeVisible();
-    await expect(page.locator('#Password'),           'Password input should be visible').toBeVisible();
-    await expect(page.locator('button[value="login"]'), 'Login button should be visible').toBeVisible();
-    await expect(page.locator('button[value="login"]'), 'Login button should be enabled').toBeEnabled();
+    //await expect(page.locator('#Email'),              'Email input should be visible').toBeVisible();
+    //await expect(page.locator('#Password'),           'Password input should be visible').toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Email" }), 'Email input should be visible').toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Password" }), 'Password input should be visible').toBeVisible();
+    
+    const loginButton = page.getByRole('button', { name: 'Log in' });
+    await expect(loginButton, 'Login button should be visible').toBeVisible();
+    await expect(loginButton, 'Login button should be enabled').toBeEnabled();
 
     // Assert password field is of type password (masks input)
-    const pwType = await page.locator('#Password').getAttribute('type');
+    //const pwType = await page.locator('#Password').getAttribute('type');
+    const pwType = await page.getByLabel("password").getAttribute("type");
     expect(pwType, 'Password field type should be "password"').toBe('password');
   });
 
   test('TC-LOGIN-002 | Valid credentials log user in and redirect away from /login', async ({ page }) => {
-    await page.locator('#Email').fill(VALID_EMAIL);
-    await page.locator('#Password').fill(VALID_PASSWORD);
-    await page.locator('button[value="login"]').click();
+    //await page.locator('#Email').fill(VALID_EMAIL);
+    //await page.locator('#Password').fill(VALID_PASSWORD);
+    //await page.locator('button[value="login"]').click();
+    await page.getByRole("textbox", { name: "Email" }).fill(VALID_EMAIL);
+    await page.getByRole("textbox", { name: "Password" }).fill(VALID_PASSWORD);
+
+    const loginButton = page.getByRole("button", { name: "Log in" });
+
+    // Ensure it's visible and enabled before clicking
+    await expect(loginButton).toBeVisible;
+    await expect(loginButton).toBeEnabled;
+
+    await loginButton.click();
+
 
     // Assert redirect away from login
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
     expect(page.url(), 'Should not be on /login after successful login').not.toContain('/login');
 
-    // Assert authenticated state (logout or my account link appears)
-    const logoutVisible    = await page.locator('a[href="/logout"]').isVisible().catch(() => false);
-    const myAccountVisible = await page.locator('a[href="/customer/info"]').isVisible().catch(() => false);
+    // Wait for the logged-in state: either logout or My Account link
+    const logoutLink = page.locator('a[href="/logout"]');
+    const myAccountLink = page.locator('a[href="/customer/info"]');
+
+    await Promise.race([
+      logoutLink.waitFor({ state: 'visible', timeout: 5000 }),
+      myAccountLink.waitFor({ state: 'visible', timeout: 5000 }),
+    ]).catch(() => { /* ignore timeout for race */ });
+
+    // Assert at least one is visible
+    const logoutVisible = await logoutLink.isVisible().catch(() => false);
+    const myAccountVisible = await myAccountLink.isVisible().catch(() => false);
+
     expect(logoutVisible || myAccountVisible, 'Logout or My Account link should be visible after login').toBeTruthy();
   });
 
