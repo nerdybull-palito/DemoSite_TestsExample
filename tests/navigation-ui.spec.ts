@@ -1,4 +1,4 @@
-// tests/11-navigation-ui.spec.ts
+// tests/navigation-ui.spec.ts
 // Each test has multiple specific expect() assertions.
 
 import { test, expect } from '@playwright/test';

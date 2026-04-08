@@ -1,4 +1,4 @@
-// tests/08-wishlist-compare.spec.ts
+// tests/wishlist-compare.spec.ts
 // Each test has multiple specific expect() assertions.
 
 import { test, expect } from '@playwright/test';

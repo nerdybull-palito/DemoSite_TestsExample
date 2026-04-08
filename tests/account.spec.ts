@@ -1,4 +1,4 @@
-// tests/10-account.spec.ts
+// tests/account.spec.ts
 // Each test has multiple specific expect() assertions.
 
 import { test, expect, Page } from '@playwright/test';

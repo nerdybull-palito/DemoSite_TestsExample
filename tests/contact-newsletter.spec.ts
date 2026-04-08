@@ -1,4 +1,4 @@
-// tests/09-contact-newsletter.spec.ts
+// tests/contact-newsletter.spec.ts
 // Each test has multiple specific expect() assertions.
 
 import { test, expect } from '@playwright/test';
