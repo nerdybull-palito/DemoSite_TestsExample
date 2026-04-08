@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "commonjs",
+        "strict": true,
+        "types": ["@playwright/test", "node"]
+    },
+    "include": ["test/**/*.ts", "playwright.config.ts"]
+}

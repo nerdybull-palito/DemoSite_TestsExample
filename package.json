@@ -6,6 +6,9 @@
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
+    "test:mobile": "playwright test --project=\"iphone 14\" --project=\"Pixel 5\"",
+    "test:iphone": "playwright test --project=\"iPhone 14\"",
+    "test:tablet": "playwright test --project=\"iPad Pro\"",
     "test:ui": "npx playwright test --ui",
     "report": "npx playwright show-report"
   },
@@ -14,8 +17,8 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^25.4.0",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
     "typescript": "^5.9.3"
   },
   "directories": {

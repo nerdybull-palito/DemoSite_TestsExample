@@ -40,26 +40,14 @@ test.describe('Homepage – Page Load & Layout', () => {
     expect(href, 'Logo href should point to /').toMatch(/^\/$/);
   });
 
+  
   test('TC-HP-003 | Header has Register, Login, Cart and Wishlist links for guest users', async ({ page }) => {
-    await page.goto(BASE + '/');
+  await page.goto(BASE + '/');
 
-    const register = page.getByRole("link", {name: "Register"});
-    const login    = page.getByRole("link", {name: "Log in"});
-    const wishlist = page.locator('header').getByRole("link", {name: "Wishlist"});
-    const cart     = page.locator('header').getByRole("link", {name: /Shopping cart/ });
-    
-
-    await expect(register, 'Register link must be visible').toBeVisible();
-    await expect(login,    'Login link must be visible').toBeVisible();
-    await expect(wishlist, 'Wishlist link must be visible').toBeVisible();
-    await expect(cart,     'Cart link must be visible').toBeVisible();
-    
-
-    await expect(register, 'Register link text').toContainText('Register');
-    await expect(login,    'Login link text').toContainText('Log in');
-    await expect(wishlist, 'Wishlist link text').toContainText(/wishlist/i);
-    await expect(cart,     'Cart link text should mention cart').toContainText(/cart/i);
-    
+  await expect(page.getByRole("link", { name: "Register" }),'Register link must be visible').toBeVisible();
+  await expect(page.getByRole("link", { name: "Log in" }), 'Login link must be visible').toBeVisible();
+  await expect(page.locator('header').getByRole("link", { name: "Wishlist" }), 'Wishlist link must be visible').toBeVisible();
+  await expect(page.locator('header').getByRole("link", { name: /Shopping cart/ }), 'Cart link must be visible').toBeVisible();
   });
 
   test('TC-HP-004 | Top navigation has all 7 category links with correct text and hrefs', async ({ page }) => {
@@ -89,6 +77,7 @@ test.describe('Homepage – Page Load & Layout', () => {
     expect(navCount, 'Top-level nav items count should be at least 7').toBeGreaterThanOrEqual(7);
   });
 
+
   test('TC-HP-005 | Featured products are listed with image, title, and price', async ({ page }) => {
     await page.goto(BASE + '/');
 
@@ -110,7 +99,33 @@ test.describe('Homepage – Page Load & Layout', () => {
     expect(parseFloat(priceText.replace(/[^0-9.]/g, '')), 'Product price value must be > 0').toBeGreaterThan(0);
   });
 
-  test('TC-HP-006 | Footer is visible and contains informational links', async ({ page }) => {
+
+  test('TC-HP-005a | Featured products are listed with image, title, and price', async ({ page }) => {
+    await page.goto(BASE + '/');
+
+    const products = page.locator('.product-grid .item-box');
+    const count = await products.count();
+    expect(count, 'At least one featured product should be displayed').toBeGreaterThan(0);
+
+    const first = products.first();
+
+    await expect(first.locator('.picture img'),   'First product image should be visible').toBeVisible();
+    await expect(first.locator('.product-title'), 'First product title should be visible').toBeVisible();
+    await expect(first.locator('.price'),         'First product price should be visible').toBeVisible();
+
+    const titleText = await first.locator('.product-title').innerText();
+    expect(titleText.trim().length, 'Product title text must not be empty').toBeGreaterThan(0);
+
+    const priceText = await first.locator('.price').innerText();
+    expect(priceText, 'Product price must include "$"').toContain('$');
+    expect(parseFloat(priceText.replace(/[^0-9.]/g, '')), 'Product price value must be > 0').toBeGreaterThan(0);
+  });
+
+
+
+
+
+  test('TC-HP-006 | Footer is visible and contains informational for one link', async ({ page }) => {
     await page.goto(BASE + '/');
 
     const footer = page.locator('.footer');
@@ -121,6 +136,96 @@ test.describe('Homepage – Page Load & Layout', () => {
 
     await expect(footer.locator('a[href="/contactus"]'), 'Contact Us footer link should be visible').toBeVisible();
   });
+
+
+
+  test('TC-HP-006a | Footer is visible and contains informational for one set of links', async ({ page }) => {
+    await page.goto(BASE + '/');
+
+    const footer = page.locator('.footer');
+    await expect(footer, 'Footer should be visible').toBeVisible();
+
+    const linkCount = await footer.locator('a').count();
+    expect(linkCount, 'Footer should contain more than 5 links').toBeGreaterThan(5);
+
+    const expectedLinks = [
+      { href: '/sitemap',           text: 'Sitemap'},
+      { href: '/shipping-returns',  text: 'Shipping & returns'},
+      { href: '/privacy-notice',    text: 'Privacy notice'},
+      { href: '/conditions-of-use', text: 'Conditions of Use'},
+      { href: '/about-us',          text: 'About Us'},
+      { href: '/contactus',         text: 'Contact us'},
+    ];
+
+    for (const {href, text } of expectedLinks){
+      const link = footer.locator('a[herf="${href}"]');
+      await expect(link, '"${text}" link should be visible in footer').toBeVisible();
+      await expect(link, '"${text}" link should contain correct text').toContainText(text, { ignoreCase: true });
+    }
+  });
+
+  
+  test('TC-HP-006b | Footer is visible and contains informational for all links', async ({ page }) => {
+    await page.goto(BASE + '/');
+
+    const footer = page.locator('.footer');
+    await expect(footer, 'Footer should be visible').toBeVisible();
+
+    const linkCount = await footer.locator('a').count();
+    expect(linkCount, 'Footer should contain more than 5 links').toBeGreaterThan(5);
+
+    const footerMenus = [
+      {
+        id: 'footer_list_3',
+        name: 'Information',
+        links: [
+          { href: '/sitemap',           text: 'Sitemap'},
+          { href: '/shipping-returns',  text: 'Shipping & returns'},
+          { href: '/privacy-notice',    text: 'Privacy notice'},
+          { href: '/conditions-of-use', text: 'Conditions of Use'},
+          { href: '/about-us',          text: 'About Us'},
+          { href: '/contactus',         text: 'Contact us'},
+        ]
+      },
+      {
+        id: 'footer_list_4',
+        name: 'Customer service',
+        links: [
+          { href: '/search',                  text: 'Search'},
+          { href: '/news',                    text: 'News'},
+          { href: '/blog',                    text: 'Blog'},
+          { href: '/recentlyviewedproducts',  text: 'Recently viewed products'},
+          { href: '/compareproducts',         text: 'Compare products list'},
+          { href: '/newproducts',             text: 'New products'},
+        ]
+      },
+      {
+        id: 'footer_list_5',
+        name: 'My account',
+        links: [
+          { href: '/customer/info',         text: 'My account'},
+          { href: '/order/history',         text: 'Orders'},
+          { href: '/customer/addresses',    text: 'Addresses'},
+          { href: '/cart',                  text: 'Shopping cart'},
+          { href: '/wishlist',              text: 'Wishlist'},
+          { href: '/vendor/apply',          text: 'Apply for vendor account'},
+        ]
+      },
+    ];
+
+    for (const { id, name, links } of footerMenus) {
+      const section = page.locator('#${id}');
+      await expect(section, '"${name}" section should be visible').toBeVisible();
+
+      for (const { href, text } of links) {
+        const link = section.locator('a[href="${href}"]');
+        await expect(link, '"${text}" link should be visible in "${name}"').toBeVisible();
+        await expect(link, '"${text}" link should contain correct text').toContainText(text, {ignoreCase: true});
+      }
+    }
+  });
+
+
 
   test('TC-HP-007 | Newsletter section has functional input and subscribe button', async ({ page }) => {
     await page.goto(BASE + '/');
