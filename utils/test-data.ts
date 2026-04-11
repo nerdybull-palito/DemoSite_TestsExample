@@ -21,7 +21,7 @@ export const NEW_USER = {
 
 // ── Search terms ─────────────────────────────────────────────────────────────
 export const SEARCH = {
-  validTerm: 'laptop',
+  validTerm: 'notebook',
   partialTerm: 'note',
   noResultTerm: 'xyzabc999notfound',
   shortTerm: 'a',        // below minimum length

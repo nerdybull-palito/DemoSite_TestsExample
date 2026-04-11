@@ -27,6 +27,11 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'https://demo.nopcommerce.com',
+    channel: 'chrome',        // real Chrome — far less likely to be flagged
+    headless: false,          // headed mode bypasses most Cloudflare checks
+
+    actionTimeout: 15000,
+    navigationTimeout: 30000,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -51,6 +56,7 @@ export default defineConfig({
     //},
 
     /* Test against mobile viewports. */
+    /*
      {
        name: 'Mobile Chrome',
        use: { ...devices['Pixel 5'] },
@@ -75,7 +81,7 @@ export default defineConfig({
        name: 'Mobile Safari',
        use: { ...devices['iPhone 12'] },
      },
-
+     */
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',

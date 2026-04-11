@@ -17,8 +17,6 @@ test.describe('User Login & Logout', () => {
     await expect(page, 'URL should be /login').toHaveURL(/\/login$/);
     await expect(page, 'Title should include nopCommerce').toHaveTitle(/nopCommerce/i);
 
-    //await expect(page.locator('#Email'),              'Email input should be visible').toBeVisible();
-    //await expect(page.locator('#Password'),           'Password input should be visible').toBeVisible();
     await expect(page.getByRole("textbox", { name: "Email" }), 'Email input should be visible').toBeVisible();
     await expect(page.getByRole("textbox", { name: "Password" }), 'Password input should be visible').toBeVisible();
     
@@ -27,23 +25,19 @@ test.describe('User Login & Logout', () => {
     await expect(loginButton, 'Login button should be enabled').toBeEnabled();
 
     // Assert password field is of type password (masks input)
-    //const pwType = await page.locator('#Password').getAttribute('type');
     const pwType = await page.getByLabel("password").getAttribute("type");
     expect(pwType, 'Password field type should be "password"').toBe('password');
   });
 
   test('TC-LOGIN-002 | Valid credentials log user in and redirect away from /login', async ({ page }) => {
-    //await page.locator('#Email').fill(VALID_EMAIL);
-    //await page.locator('#Password').fill(VALID_PASSWORD);
-    //await page.locator('button[value="login"]').click();
     await page.getByRole("textbox", { name: "Email" }).fill(VALID_EMAIL);
     await page.getByRole("textbox", { name: "Password" }).fill(VALID_PASSWORD);
 
     const loginButton = page.getByRole("button", { name: "Log in" });
 
     // Ensure it's visible and enabled before clicking
-    await expect(loginButton).toBeVisible;
-    await expect(loginButton).toBeEnabled;
+    await expect(loginButton).toBeVisible();
+    await expect(loginButton).toBeEnabled();
 
     await loginButton.click();
 

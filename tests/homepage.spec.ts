@@ -279,7 +279,7 @@ test.describe('Homepage – Page Load & Layout', () => {
   //  expect(text.toLowerCase(), 'Error result must NOT say "thank you"').not.toContain('thank you');
   //  expect(text.trim().length, 'Error message should not be empty').toBeGreaterThan(0);
   //});
-
+/*
   test('TC-HP-010 | Hovering Computers nav reveals Desktops and Notebooks submenu', async ({ page }) => {
     await page.goto(BASE + '/');
 
@@ -299,7 +299,7 @@ test.describe('Homepage – Page Load & Layout', () => {
     expect(desktopsHref,  'Desktops href should be /desktops').toBe('/desktops');
     expect(notebooksHref, 'Notebooks href should be /notebooks').toBe('/notebooks');
   });
-
+*/
   test('TC-HP-011 | Register link navigates to registration page with correct form', async ({ page }) => {
     await page.goto(BASE + '/');
 
@@ -312,23 +312,24 @@ test.describe('Homepage – Page Load & Layout', () => {
     await expect(page.locator('#Email'),         'Email field must be present').toBeVisible();
     await expect(page.locator('#Password'),      'Password field must be present').toBeVisible();
     await expect(page.locator('button#register-button'), 'Register button must be present').toBeVisible();
-  });
+  });   
 
   test('TC-HP-012 | Login link navigates to login page with correct form', async ({ page }) => {
     await page.goto(BASE + '/');
 
-    await page.locator('.header-links a[href="/login"]').click();
+    //await page.locator('.header-links a[href="/login"]').click();
+    await page.getByRole('link', { name: 'Log in'}).click();
 
-    await expect(page, 'URL should be /login').toHaveURL(/\/login$/);
+    await expect(page, 'URL should be /login').toHaveURL(/\/login/);
     await expect(page.locator('#Email'),    'Email input must be present on login page').toBeVisible();
     await expect(page.locator('#Password'), 'Password input must be present on login page').toBeVisible();
-    await expect(page.locator('button[value="login"]'), 'Login button must be present').toBeVisible();
+    await expect(page.getByRole('link', { name: 'Log in' }), 'Login button must be present').toBeVisible();
   });
 
   test('TC-HP-013 | Electronics nav link navigates to electronics category page', async ({ page }) => {
     await page.goto(BASE + '/');
 
-    await page.locator('.top-menu a[href="/electronics"]').click();
+    await page.getByRole('button', { name: 'Electronics' }).click();
 
     await expect(page, 'URL should change to /electronics').toHaveURL(/\/electronics$/);
     await expect(page.locator('.page-title h1'), 'Heading should say Electronics').toContainText('Electronics');

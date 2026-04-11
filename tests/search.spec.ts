@@ -10,7 +10,7 @@ test.describe('Product Search – Header Bar', () => {
   test('TC-SRCH-001 | Valid keyword search navigates to /search and shows results', async ({ page }) => {
     await page.goto(BASE + '/');
 
-    await page.locator('#small-searchterms').fill('laptop');
+    await page.locator('#small-searchterms').fill('notebook');
     await page.locator('.search-box button[type="submit"]').click();
 
     await expect(page, 'Should navigate to /search').toHaveURL(/\/search/);
